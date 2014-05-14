@@ -24,7 +24,9 @@ libraryDependencies ++= Seq(
 
 //Stream related stuff
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream-experimental" % "0.2"
+  "com.typesafe.akka" %% "akka-stream-experimental" % "0.2",
+  "com.vaadin" % "vaadin-push" % "7.1.5",
+  "org.eclipse.jetty" % "jetty-websocket" % "9.1.3.v20140225" % "container"
 )
 
 // Settings for the Vaadin plugin widgetset compilation
