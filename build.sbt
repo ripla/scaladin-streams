@@ -22,6 +22,11 @@ libraryDependencies ++= Seq(
 	//"com.vaadin.addon" % "vaadin-charts" % "1.1.5"
 )
 
+//Stream related stuff
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-stream-experimental" % "0.2"
+)
+
 // Settings for the Vaadin plugin widgetset compilation
 // Widgetset compilation needs memory and to avoid an out of memory error it usually needs more memory:
 javaOptions in compileVaadinWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M")
