@@ -6,15 +6,18 @@ seq(vaadinWebSettings: _*)
 
 resolvers += "Vaadin add-ons repository" at "http://maven.vaadin.com/vaadin-addons"
 
+val vaadinVersion: String = "7.1.15"
+val jettyVersion: String = "9.1.3.v20140225"
+
 // basic dependencies
 libraryDependencies ++= Seq(
-  "com.vaadin" % "vaadin-server" % "7.1.15",
-  "com.vaadin" % "vaadin-client-compiled" % "7.1.15",
-  "com.vaadin" % "vaadin-themes" % "7.1.15",
+  "com.vaadin" % "vaadin-server" % vaadinVersion,
+  "com.vaadin" % "vaadin-client-compiled" % vaadinVersion,
+  "com.vaadin" % "vaadin-themes" % vaadinVersion,
   "org.vaadin.addons" % "scaladin" % "3.0.0",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
-  "org.eclipse.jetty" % "jetty-webapp" % "9.1.3.v20140225" % "container",
-  "org.eclipse.jetty" % "jetty-annotations" % "9.1.3.v20140225" % "container"
+  "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container",
+  "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container"
 )
 
 libraryDependencies ++= Seq(
@@ -25,8 +28,8 @@ libraryDependencies ++= Seq(
 //Stream related stuff
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream-experimental" % "0.2",
-  "com.vaadin" % "vaadin-push" % "7.1.5",
-  "org.eclipse.jetty" % "jetty-websocket" % "9.1.3.v20140225" % "container"
+  "com.vaadin" % "vaadin-push" % vaadinVersion,
+  "org.eclipse.jetty.websocket" % "websocket-core" % "9.0.0.M2" % "container"
 )
 
 // Settings for the Vaadin plugin widgetset compilation
