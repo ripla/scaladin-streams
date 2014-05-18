@@ -32,6 +32,12 @@ libraryDependencies ++= Seq(
   "org.eclipse.jetty.websocket" % "websocket-core" % "9.0.0.M2" % "container"
 )
 
+//Testing
+libraryDependencies ++= Seq(
+  "org.scalatest" % "scalatest_2.10" % "2.1.6" % "test",
+  "org.mockito" % "mockito-all" % "1.9.5" % "test"
+)
+
 // Settings for the Vaadin plugin widgetset compilation
 // Widgetset compilation needs memory and to avoid an out of memory error it usually needs more memory:
 javaOptions in compileVaadinWidgetsets := Seq("-Xss8M", "-Xmx512M", "-XX:MaxPermSize=512M")
