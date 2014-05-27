@@ -10,9 +10,9 @@ import akka.actor.ActorSystem
 
 class PropertyOpsTest extends FlatSpec with MockitoSugar {
 
-  behavior of "Property related implicits"
+  behavior of "Property implicits"
 
-  it should "allow values to be produced to a property" in {
+  it should "allow values to be produced to a property implicitly" in {
     implicit val ui = mock[UI]
     implicit val system = ActorSystem("Test")
 

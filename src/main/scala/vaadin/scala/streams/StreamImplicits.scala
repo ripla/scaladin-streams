@@ -4,37 +4,13 @@ import vaadin.scala.{UI, Property}
 import org.reactivestreams.api.Consumer
 import org.reactivestreams.spi.{Subscription, Subscriber}
 import com.vaadin.server.ErrorEvent
+import vaadin.scala.streams.subscriber.{DelayedSubscriber, PropertySubscriber, ErrorHandlingSubscriber, UISubscriber}
 
 object StreamImplicits {
 
-  implicit class PropertyOps[T](property: Property[T])(implicit ui: UI) extends Consumer[T] {
-    val internalSubscriber = new Subscriber[T] {
-
-      var internalSubscription: Option[Subscription] = _
-
-      override def onSubscribe(subscription: Subscription): Unit = {
-        internalSubscription = Some(subscription)
-        subscription.requestMore(1)
-      }
-
-      override def onError(cause: Throwable): Unit = ui.p.getErrorHandler.error(new ErrorEvent(cause))
-
-      override def onComplete(): Unit = internalSubscription = None
-
-      override def onNext(element: T): Unit = {
-        Console.println(s"Got next value from stream: $element")
-        ui.access {
-          property.value = element
-        }
-        waitAndGetNext()
-      }
-
-      def waitAndGetNext() {
-        Thread.sleep(500)
-        internalSubscription.foreach(_.requestMore(1))
-      }
+  implicit class PropertyOps[T](p: Property[T])(implicit ui: UI) extends Consumer[T] {
+    override def getSubscriber: Subscriber[T] = new UISubscriber[T] with DelayedSubscriber[T] with ErrorHandlingSubscriber[T] with PropertySubscriber[T] {
+      override val property = p
     }
-
-    override def getSubscriber: Subscriber[T] = internalSubscriber
   }
 }
