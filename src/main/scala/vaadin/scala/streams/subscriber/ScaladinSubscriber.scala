@@ -1,6 +1,6 @@
 package vaadin.scala.streams.subscriber
 
-import org.reactivestreams.spi.{Subscription, Subscriber}
+import org.reactivestreams.{Subscriber, Subscription}
 import vaadin.scala.UI
 
 trait ScaladinSubscriber[T] extends Subscriber[T] {
@@ -9,7 +9,7 @@ trait ScaladinSubscriber[T] extends Subscriber[T] {
 
   var internalSubscription: Option[Subscription] = _
 
-  override def onSubscribe(subscription: Subscription): Unit = {
+  override def onSubscribe(subscription: Subscription): Unit = ui.access {
     internalSubscription = Some(subscription)
     getNextValues()
   }
@@ -19,7 +19,7 @@ trait ScaladinSubscriber[T] extends Subscriber[T] {
 
   override def onError(cause: Throwable): Unit = Console.println(s"From stream: $internalSubscription, got error: $cause")
 
-  override def onNext(element: T): Unit = {
+  override def onNext(element: T): Unit = ui.access {
     handlePressure()
     getNextValues()
   }

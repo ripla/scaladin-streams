@@ -27,7 +27,7 @@ libraryDependencies ++= Seq(
 
 //Stream related stuff
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream-experimental" % "0.2",
+  "com.typesafe.akka" %% "akka-stream-experimental" % "0.9",
   "com.vaadin" % "vaadin-push" % vaadinVersion,
   "org.eclipse.jetty.websocket" % "websocket-core" % "9.0.0.M2" % "container"
 )
