@@ -1,40 +1,43 @@
 package vaadin.scala.streams
 
-import akka.actor.{ActorSystem, TypedActor, TypedProps}
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.Source
+import akka.stream.testkit.scaladsl.TestSink
 import org.reactivestreams.Publisher
-import org.scalatest.FlatSpec
 import org.scalatest.mock.MockitoSugar
-import vaadin.scala.{Component, TextField}
+import org.scalatest.{BeforeAndAfter, FlatSpec}
+import vaadin.scala.TextField
+import vaadin.scala.streams.source.ComponentPublisher
 
 
-class ComponentOpsTest extends FlatSpec with MockitoSugar {
+class ComponentOpsTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
 
-  behavior of "Component implicits"
+  behavior of "Component streaming"
+
+  implicit var actorSystem: ActorSystem = _
+  implicit var actorMaterializer: ActorMaterializer = _
+
+  before {
+    actorSystem = ActorSystem()
+    actorMaterializer = ActorMaterializer()
+  }
+
+  after {
+    actorSystem.shutdown()
+  }
 
   it should "allow producing a boolean stream from Component.isEnabled" in {
-    val textfield = new TextField()
+  /*  val textfield = new TextField() with ComponentPublisher
 
+    val enabledSource: Publisher[Boolean] = textfield.enabled
 
-    val system: ActorSystem = ActorSystem()
+    val source = Source(enabledSource)
+      .runWith(TestSink.probe[Boolean])
+      .request(1)
 
-    implicit class Foo(c: Component) {
+    textfield.enabled_=(true)(actorMaterializer)
 
-      def enabled: Producer[Boolean] = new Producer[Boolean] {
-
-        val internalPublisher: Publisher[Boolean] = TypedActor(system).typedActorOf(TypedProps(classOf[Publisher[Boolean]], new Publisher[Boolean] {
-          override def subscribe(subscriber: Subscriber[Boolean]): Unit = {
-
-          }
-        }))
-
-        override def getPublisher: Publisher[Boolean] = internalPublisher
-
-        override def produceTo(consumer: Consumer[Boolean]): Unit = internalPublisher.subscribe(consumer.getSubscriber)
-      }
-    }
-
-
-    val producer: Producer[Boolean] = textfield.enabled
-
+    source.expectNext(true)*/
   }
 }

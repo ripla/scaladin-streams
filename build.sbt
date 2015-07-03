@@ -1,12 +1,12 @@
 name := "Scaladin Streams"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.7"
 
 seq(vaadinWebSettings: _*)
 
 resolvers += "Vaadin add-ons repository" at "http://maven.vaadin.com/vaadin-addons"
 
-val vaadinVersion: String = "7.1.15"
+val vaadinVersion: String = "7.4.8"
 val jettyVersion: String = "9.1.3.v20140225"
 
 // basic dependencies
@@ -14,7 +14,7 @@ libraryDependencies ++= Seq(
   "com.vaadin" % "vaadin-server" % vaadinVersion,
   "com.vaadin" % "vaadin-client-compiled" % vaadinVersion,
   "com.vaadin" % "vaadin-themes" % vaadinVersion,
-  "org.vaadin.addons" % "scaladin" % "3.0.0",
+  "org.vaadin.addons" % "scaladin" % "3.1.0",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container",
   "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container"
@@ -27,14 +27,15 @@ libraryDependencies ++= Seq(
 
 //Stream related stuff
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream-experimental" % "0.9",
+  "com.typesafe.akka" %% "akka-stream-experimental" % "1.0-RC4",
+  "com.typesafe.akka" %% "akka-stream-testkit-experimental" % "1.0-RC4",
   "com.vaadin" % "vaadin-push" % vaadinVersion,
   "org.eclipse.jetty.websocket" % "websocket-core" % "9.0.0.M2" % "container"
 )
 
 //Testing
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.10" % "2.1.6" % "test",
+  "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test",
   "org.mockito" % "mockito-all" % "1.9.5" % "test"
 )
 
