@@ -1,11 +1,11 @@
 package vaadin.scala.streams.source
 
-import akka.stream.Materializer
-import org.reactivestreams.{Subscriber, Publisher}
 import vaadin.scala.Component
 
 trait ComponentPublisher extends Component {
 
-  lazy val enabledSource = new SourceHolder[Boolean](enabled_=)
+  lazy val enabledStream = new PropertyStream[Boolean](enabled_=)
+
+  lazy val visibleStream = new PropertyStream[Boolean](visible_=)
 
 }

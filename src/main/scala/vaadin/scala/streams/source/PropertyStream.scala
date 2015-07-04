@@ -2,9 +2,9 @@ package vaadin.scala.streams.source
 
 import akka.stream.Materializer
 import akka.stream.scaladsl._
-import org.reactivestreams.{Subscriber, Publisher}
+import org.reactivestreams.{Publisher, Subscriber}
 
-class SourceHolder[T](setter: T => Unit) {
+class PropertyStream[T](setter: T => Unit) {
 
   private var _publisher: Publisher[T] = _
   private var _subscriber: Subscriber[T] = _
