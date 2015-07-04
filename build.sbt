@@ -17,7 +17,8 @@ libraryDependencies ++= Seq(
   "org.vaadin.addons" % "scaladin" % "3.1.0",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container",
-  "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container"
+  "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container",
+  "org.eclipse.jetty" % "jetty-continuation" % "9.0.0.M2" % "container"
 )
 
 libraryDependencies ++= Seq(

@@ -1,5 +1,6 @@
 package vaadin.scala.streams.source
 
+import akka.stream.scaladsl.Source
 import vaadin.scala.Component
 
 trait ComponentPublisher extends Component {
