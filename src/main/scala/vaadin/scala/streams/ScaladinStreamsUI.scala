@@ -1,16 +1,12 @@
 package vaadin.scala.streams
 
-import java.util.Date
-
-import akka.actor.{ActorSystem, Cancellable}
+import akka.actor.ActorSystem
 import akka.event.Logging
+import akka.stream.scaladsl.{Flow, Sink}
 import akka.stream.{ActorMaterializer, Attributes}
-import akka.stream.scaladsl.{Sink, Source}
 import org.reactivestreams.Subscriber
 import vaadin.scala._
 import vaadin.scala.streams.StreamImplicits._
-
-import scala.concurrent.duration._
 
 class ScaladinStreamsUI extends UI(title = "Scaladin Streams", pushMode = PushMode.Automatic) {
 
@@ -18,7 +14,12 @@ class ScaladinStreamsUI extends UI(title = "Scaladin Streams", pushMode = PushMo
   implicit var actorMaterializer: ActorMaterializer = ActorMaterializer()
   implicit val thisUI: vaadin.scala.UI = this
 
-  detachListeners += (event => system.shutdown())
+  detachListeners += {
+    event => {
+      Console.println(s"Detaching UI $event")
+      system.shutdown()
+    }
+  }
 
   content = new VerticalLayout {
 
@@ -26,17 +27,20 @@ class ScaladinStreamsUI extends UI(title = "Scaladin Streams", pushMode = PushMo
 
     val label = Label("Loading...")
 
-    val timeTicker: Source[Date, Cancellable] = Source(1.second, 1.second, new Object()).map(t => new Date)
+    val dayTicker = Ticker.source
+
+    val tickerToDay = Flow[Object].scan(1)((prev: Int, ignored: Object) => prev + 1)
+    val stringify: Flow[Any, Option[String], Unit] = Flow[Any].map(anyVal => Option(anyVal).map(_.toString))
+
 
     val labelSubscriber: Subscriber[Option[String]] = label.valueIn
 
-    timeTicker
-      .log("Dateticker").withAttributes(Attributes.logLevels(onElement = Logging.InfoLevel, onFailure = Logging.ErrorLevel))
-      .map(date => Some(date.toString))
+    dayTicker
+      .via(tickerToDay)
+      .via(stringify)
+      .log("Dayticker").withAttributes(Attributes.logLevels(onElement = Logging.InfoLevel, onFailure = Logging.ErrorLevel))
       .runWith(Sink(labelSubscriber))
 
     components += label
-
-    components += Button(caption = "Print state",  clickListener = Console.println(label.value))
   }
 }
