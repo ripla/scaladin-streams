@@ -12,7 +12,7 @@ import vaadin.scala._
 import vaadin.scala.streams.source.ComponentPublisher
 
 
-class ComponentStreamTests extends FlatSpec with MockitoSugar with BeforeAndAfter {
+class ComponentStreamTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
 
   behavior of "Component streaming"
 

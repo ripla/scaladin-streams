@@ -1,6 +1,4 @@
-package vaadin.scala.streams
-
-import java.util.Date
+package vaadin.scala.streams.generators
 
 import akka.actor.Cancellable
 import akka.stream.scaladsl.Source

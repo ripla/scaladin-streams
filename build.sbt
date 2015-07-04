@@ -8,17 +8,18 @@ resolvers += "Vaadin add-ons repository" at "http://maven.vaadin.com/vaadin-addo
 
 val vaadinVersion: String = "7.4.8"
 val jettyVersion: String = "9.1.3.v20140225"
+val akkaStreamsVersion = "1.0-RC4"
 
 // basic dependencies
 libraryDependencies ++= Seq(
   "com.vaadin" % "vaadin-server" % vaadinVersion,
   "com.vaadin" % "vaadin-client-compiled" % vaadinVersion,
   "com.vaadin" % "vaadin-themes" % vaadinVersion,
-  "org.vaadin.addons" % "scaladin" % "3.1.0",
+  "org.vaadin.addons" %% "scaladin" % "3.2-SNAPSHOT",
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container",
   "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container",
-  "org.eclipse.jetty" % "jetty-continuation" % "9.0.0.M2" % "container"
+  "org.eclipse.jetty" % "jetty-continuation" % jettyVersion % "container"
 )
 
 libraryDependencies ++= Seq(
@@ -28,10 +29,10 @@ libraryDependencies ++= Seq(
 
 //Stream related stuff
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-stream-experimental" % "1.0-RC4",
-  "com.typesafe.akka" %% "akka-stream-testkit-experimental" % "1.0-RC4",
+  "com.typesafe.akka" %% "akka-stream-experimental" % akkaStreamsVersion,
+  "com.typesafe.akka" %% "akka-stream-testkit-experimental" % akkaStreamsVersion,
   "com.vaadin" % "vaadin-push" % vaadinVersion,
-  "org.eclipse.jetty.websocket" % "websocket-core" % "9.0.0.M2" % "container"
+  "org.eclipse.jetty.websocket" % "websocket-server" % jettyVersion % "container"
 )
 
 //Testing
