@@ -1,60 +1,48 @@
 package vaadin.scala.streams.source
 
-import akka.actor.ActorRef
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.{Materializer, OverflowStrategy}
-import org.reactivestreams.{Publisher, Subscriber, Subscription}
+import akka.stream.Materializer
+import akka.stream.scaladsl._
+import org.reactivestreams.{Subscriber, Publisher}
 
 class SourceHolder[T](setter: T => Unit) {
 
-  //lazily instantiated, but needs implicit Materializer
-  private var sourceInternal: Source[T, ActorRef] = _
-  private var sourceActorInternal: ActorRef = _
+  private var _publisher: Publisher[T] = _
+  private var _subscriber: Subscriber[T] = _
 
-  def publisher(implicit mat: Materializer): Publisher[T] = source.runWith(Sink.publisher)
-
-  def subscriber(): Subscriber[T] = {
-
-    new Subscriber[T] {
-      var sub: Subscription = _
-
-      override def onError(t: Throwable): Unit = sub.cancel()
-
-      override def onSubscribe(s: Subscription): Unit = {
-        sub = s
-        sub.request(1)
-      }
-
-      override def onComplete(): Unit = sub.cancel()
-
-      override def onNext(t: T): Unit = {
-        setter(t)
-      }
-    }
-  }
-
-  def source(implicit mat: Materializer): Source[T, ActorRef] = {
-    if (sourceInternal == null) {
-      sourceInternal = createSource()
+  def publisher(implicit mat: Materializer): Publisher[T] = {
+    if (_publisher == null) {
+      initFlow()
     }
 
-    sourceInternal
+    _publisher
   }
 
-  def sourceActor(implicit mat: Materializer): ActorRef = {
-    if (sourceActorInternal == null) {
-      sourceActorInternal = createSourceFlow(source)
+  def subscriber(implicit mat: Materializer): Subscriber[T] = {
+    if (_subscriber == null) {
+      initFlow()
     }
 
-    sourceActorInternal
+    _subscriber
   }
 
-  private def createSource(): Source[T, ActorRef] =
-    Source.actorRef[T](1, OverflowStrategy.dropBuffer)
+  private def initFlow()(implicit mat: Materializer): Unit = {
+    val subscriberSource = Source.subscriber[T]
+    val pojoModifyingSink = Sink.foreach(setter)
+    val publisherSink = Sink.fanoutPublisher[T](initialBufferSize = 4, maximumBufferSize = 16)
 
+    val graph = FlowGraph.closed(subscriberSource, publisherSink)(Keep.both) { implicit builder =>
+      (subscriber, publisher) =>
+        import FlowGraph.Implicits._
 
-  private def createSourceFlow(source: Source[T, ActorRef])(implicit mat: Materializer): ActorRef =
-    Flow[T]
-      .to(Sink.ignore)
-      .runWith(source)
+        val broadcast = builder.add(Broadcast[T](2))
+
+        subscriber ~> broadcast ~> publisher
+                      broadcast ~> pojoModifyingSink
+    }
+
+    val result: (Subscriber[T], Publisher[T]) = graph.run()
+
+    _subscriber = result._1
+    _publisher = result._2
+  }
 }

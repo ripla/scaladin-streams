@@ -2,13 +2,18 @@ package vaadin.scala.streams
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.Source
+import akka.stream.scaladsl.{Sink, Source}
+import akka.stream.testkit.TestSubscriber.Probe
 import akka.stream.testkit.scaladsl.TestSink
 import org.reactivestreams.Publisher
 import org.scalatest.mock.MockitoSugar
 import org.scalatest.{BeforeAndAfter, FlatSpec}
 import vaadin.scala.TextField
 import vaadin.scala.streams.source.ComponentPublisher
+
+import scala.concurrent.Await
+
+import scala.concurrent.duration._
 
 
 class ComponentOpsTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
@@ -28,16 +33,16 @@ class ComponentOpsTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
   }
 
   it should "allow producing a boolean stream from Component.isEnabled" in {
-  /*  val textfield = new TextField() with ComponentPublisher
+    val textfield = new TextField() with ComponentPublisher
 
-    val enabledSource: Publisher[Boolean] = textfield.enabled
+    val enabledPublisher: Publisher[Boolean] = textfield.enabledSource.publisher
 
-    val source = Source(enabledSource)
+    val enabledSource: Probe[Boolean] = Source(enabledPublisher)
       .runWith(TestSink.probe[Boolean])
-      .request(1)
 
-    textfield.enabled_=(true)(actorMaterializer)
+    Source.single(true).to(Sink(textfield.enabledSource.subscriber)).run()
 
-    source.expectNext(true)*/
+    // assert
+    enabledSource.requestNext(true)
   }
 }
