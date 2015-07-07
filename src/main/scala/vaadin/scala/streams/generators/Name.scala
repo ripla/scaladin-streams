@@ -2,8 +2,7 @@ package vaadin.scala.streams.generators
 
 import akka.stream.scaladsl.Source
 
-
-object Name extends FromCsvGenerator {
+object Name extends Generator {
 
   def getName(): String = createName(pickRandom(firstNames), pickRandom(lastNames))
 

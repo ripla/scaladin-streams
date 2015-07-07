@@ -2,11 +2,7 @@ package vaadin.scala.streams.generators
 
 import akka.stream.scaladsl.Source
 
-import scala.util.Random
-
-object UserStory extends FromCsvGenerator {
-
-  Random.nextInt()
+object UserStory extends Generator {
 
   def getStory(): String = createStory(pickRandom(whoLines), pickRandom(whatLines), pickRandom(whyLines))
 
