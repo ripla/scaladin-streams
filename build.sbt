@@ -19,7 +19,8 @@ libraryDependencies ++= Seq(
   "javax.servlet" % "javax.servlet-api" % "3.0.1" % "provided",
   "org.eclipse.jetty" % "jetty-webapp" % jettyVersion % "container",
   "org.eclipse.jetty" % "jetty-annotations" % jettyVersion % "container",
-  "org.eclipse.jetty" % "jetty-continuation" % jettyVersion % "container"
+  "org.eclipse.jetty" % "jetty-continuation" % jettyVersion % "container",
+  "joda-time" % "joda-time" % "2.8.1"
 )
 
 libraryDependencies ++= Seq(
