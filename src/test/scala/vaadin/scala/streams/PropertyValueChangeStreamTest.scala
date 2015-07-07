@@ -16,28 +16,11 @@ import scala.concurrent.duration._
 import org.mockito.Mockito._
 import org.mockito.Matchers._
 
-class PropertyValueChangeStreamTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
+class PropertyValueChangeStreamTest extends ScaladinStreamTest {
 
   behavior of "Property value streaming"
 
-  implicit var actorSystem: ActorSystem = _
-  implicit var actorMaterializer: ActorMaterializer = _
-  implicit val accessingUI: UI = mock[UI]
-
-  before {
-    actorSystem = ActorSystem()
-    actorMaterializer = ActorMaterializer()
-
-    when(accessingUI.access(any(classOf[Function0[Unit]]))).then(new Answer[Unit] {
-      override def answer(invocation: InvocationOnMock): Unit = {
-        invocation.getArguments()(0).asInstanceOf[Function0[Unit]]()
-      }
-    })
-  }
-
-  after {
-    actorSystem.shutdown()
-  }
+  implicit val accessingUI: UI = new UI() {}
 
   it should "generate a stream of values from a property" in {
     val textfield = new TextField()
@@ -55,12 +38,13 @@ class PropertyValueChangeStreamTest extends FlatSpec with MockitoSugar with Befo
 
   it should "allow streaming values to a property" in {
     val textfield = new TextField
+    textfield.value = None
 
     val valueSubscriber: Subscriber[Option[String]] = textfield.valueIn
 
     Source.single("foo").map(s => Some(s.toUpperCase())).runWith(Sink(valueSubscriber))
 
-    Thread.sleep(100)
+    Thread.sleep(200)
 
     assert(textfield.value === Some("FOO"))
   }

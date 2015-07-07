@@ -27,7 +27,11 @@ object StreamImplicits {
     // create a flow from an Subscriber -> Function sink
     val subscriberSource = Source.subscriber[Option[T]]
     val functionSink = Sink.foreach[Option[T]](e => {
-      ui.access(c.value_=(e))
+      //slight optimization, pre-attach we can just run without access
+      if(ui.attached())
+        ui.access(c.value_=(e))
+      else
+        c.value = e
     })
     val (valueSubscriber: Subscriber[Option[T]], functionFuture: Future[Unit]) = Flow[Option[T]].runWith(subscriberSource, functionSink)
 

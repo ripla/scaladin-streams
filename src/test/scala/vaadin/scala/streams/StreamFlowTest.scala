@@ -10,26 +10,14 @@ import org.scalatest.{BeforeAndAfter, FlatSpec}
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
-class StreamFlowTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
+class StreamFlowTest extends ScaladinStreamTest {
 
   behavior of "Stream flows"
-
-  implicit var actorSystem: ActorSystem = _
-  implicit var actorMaterializer: ActorMaterializer = _
 
   case class FlowTest(var value: Boolean) {
     def setValue(newValue: Boolean) {
       value = newValue
     }
-  }
-
-  before {
-    actorSystem = ActorSystem()
-    actorMaterializer = ActorMaterializer()
-  }
-
-  after {
-    actorSystem.shutdown()
   }
 
   it should "pass messages from the subscriber to the given function" in {

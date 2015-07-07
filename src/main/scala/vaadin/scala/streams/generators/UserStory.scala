@@ -1,12 +1,28 @@
 package vaadin.scala.streams.generators
 
-/**
- * Created by risto on 4.7.2015.
- */
-object UserStory {
+import akka.stream.scaladsl.Source
 
+import scala.util.Random
 
-  def createStory(who: String, what: String, why: String) = s"As a $who, I want to$what, so that I can $why"
+object UserStory extends FromCsvGenerator {
 
+  Random.nextInt()
 
+  def getStory(): String = createStory(pickRandom(whoLines), pickRandom(whatLines), pickRandom(whyLines))
+
+  def getStories(): Source[String, Unit] = Source(() => Iterator.continually(getStory()))
+
+  private def createStory(who: String, what: String, why: String) = s"As a $who, I want to $what, so that I can $why"
+
+  val whatLines: List[String] = readCsvLines("whats.csv")
+    .map(line => line.filter(char => char != ','))
+    .toList
+
+  val whoLines: List[String] = readCsvLines("whos.csv")
+    .map(line => line.filter(char => char != ','))
+    .toList
+
+  val whyLines: List[String] = readCsvLines("whys.csv")
+    .map(line => line.filter(char => char != ','))
+    .toList
 }

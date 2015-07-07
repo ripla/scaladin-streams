@@ -12,21 +12,9 @@ import vaadin.scala._
 import vaadin.scala.streams.source.ComponentPublisher
 
 
-class ComponentStreamTest extends FlatSpec with MockitoSugar with BeforeAndAfter {
+class ComponentStreamTest extends ScaladinStreamTest {
 
   behavior of "Component streaming"
-
-  implicit var actorSystem: ActorSystem = _
-  implicit var actorMaterializer: ActorMaterializer = _
-
-  before {
-    actorSystem = ActorSystem()
-    actorMaterializer = ActorMaterializer()
-  }
-
-  after {
-    actorSystem.shutdown()
-  }
 
   it should "allow producing a boolean stream from Component.isEnabled" in {
     val textfield = new TextField() with ComponentPublisher
